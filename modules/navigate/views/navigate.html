@@ -1,0 +1,549 @@
+<nav class="navbar navbar-default navbar-blend" ng-controller="navigateController" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Stone Mining</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a ng-if="currentUser"><b>Welcome {{currentUser}}</b></a>
+                </li>
+              <!--   <li><a ng-if="!currentUser" href="#login"><b>Login</b></a>
+                </li>
+                <li><a ng-if="!currentUser" href="#signup"><b>Sign Up</b></a>
+                </li> -->
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<div ui-yield-to="modals"></div>
+<div class="container" ng-init="getFile();getWorkOrderDetails();getStoneDetails();" style="overflow:auto;width: 100%;height: 500px;">
+<div class="alert alert-danger" ng-if="online_status_string!='online'"> Application is {{online_status_string}}</div>
+<div class="alert alert-danger" ng-if="http_online_status_string ==='offline'"> Service is down. Please try again, Sorry for the trouble. </div>
+    <div ui-content-for="modals">
+
+        <div class="modal1" ui-if="event1" ui-state="event1">
+            <div id="workorder" class="" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header text-center" style="background-color:#1ABC9C;color: white;">
+                            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                            <button type="button" ui-turn-off="event1" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Work Order</h4>
+                        </div>
+                        <div class="modal-body">
+                            <br>
+                            <br>
+                            <pre>{{wo}}</pre>
+                            <form name="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="empName">Employee Name</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="empName" class="form-control" id="empName" ng-model="wo.empName" required>
+                                        <span ng-show="form.empName.$dirty && form.empName.$error.required" class="help-block">Employee name is required</span>
+                                    </div>
+
+                                </div>
+
+                       <!--            <div class="form-group">
+                                    <label class="control-label col-sm-3" for="timeIN">Time In:</label>
+                                    <div class="col-sm-7">
+                                       <div>
+
+                                            <datepicker date-format="yyyy-MM-dd hh:mm" selector="form-control">
+                                                <div class="input-group date">
+                                                    <input class="form-control" name="timeIN" id="timeIN" ng-model="timeIN" placeholder="Select the in time" required/>
+                                                    <span class="input-group-addon" style="cursor: pointer">
+        <i class="fa fa-lg fa-calendar"></i>
+        </span>
+                                                    <span ng-show="form.timeIN.$dirty && form.timeIN.$error.required" class="help-block">Time-in is required</span>
+                                                </div>
+                                            </datepicker>
+                                        </div> 
+                                 </div>
+                                 </div> -->
+                                 
+<!--                                          <div class="form-group">
+            <label class="col-sm-3 control-label">Time In:</label>
+            <div class="col-sm-7">
+                <p class="input-group">
+                    <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="ctrl.picker3.date" is-open="ctrl.picker3.open" />
+              <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="ctrl.openCalendar($event, 'picker3')"><i class="fa fa-calendar"></i></button>
+              </span>
+                </p>
+            </div>
+        </div> -->
+<!--                                  <div class="form-group">
+                                    <label class="control-label col-sm-3" for="timeIN">Time In:</label>
+                                    <div class="col-sm-7">
+
+                                                <div id="datetimepicker" class="input-group date">
+                                                    <input class="form-control" name="timeIN" id="timeIN" ng-model="wo.timeIN" placeholder="Select the in time" required/>
+                                                    <span class="input-group-addon" style="cursor: pointer">
+        <i class="fa fa-lg fa-calendar"></i>
+        </span>
+                                                    <span ng-show="form.timeIN.$dirty && form.timeIN.$error.required" class="help-block">Time-in is required</span>
+                                                </div>
+                                 </div>
+                                 </div> -->
+                                 
+<!--                                  <div class="form-group">
+                                    <label class="control-label col-sm-3" for="timeOUT">Time Out:</label>
+                                    <div class="col-sm-7">
+                                        <datepicker date-format="yyyy-MM-dd hh:mm" selector="form-control">
+                                            <div class="input-group date">
+                                                <input class="form-control" name="timeOUT" id="timeOUT" ng-model="wo.timeOUT" placeholder="Select the out time" required/>
+                                                <span class="input-group-addon" style="cursor: pointer">
+        <i class="fa fa-lg fa-calendar"></i>
+        </span>
+                                                <span ng-show="form.timeOUT.$dirty && form.timeOUT.$error.required" class="help-block">Time-out is required</span>
+                                            </div>
+                                        </datepicker>
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="timeIN">Time IN:</label>
+                                    <div class="col-sm-7">
+                                    	   <datepicker date-format="yyyy-MM-dd" button-prev="<i class='fa fa-arrow-left'></i>" button-next="<i class='fa fa-arrow-right'></i>" datepicker-mobile="true" selector="form-control">
+                                                <div class="input-group date">
+                                                    <input class="form-control" name="dtIN" id="dtIN" ng-model="wo.dtIN" placeholder="Select date" required/>
+                                                    <span class="input-group-addon" style="cursor: pointer"><i class="fa fa-lg fa-calendar"></i></span>
+                                                    <span ng-show="form.dtIN.$dirty && form.dtIN.$error.required" class="help-block">Date for Time-in is required</span>
+                                                </div>
+                                            </datepicker>
+                                            <div class="input-group date">
+    									 			<input class="form-control" name="tmIN" id="tmIN" ng-model="wo.tmIN" placeholder="Select the IN time" data-lng-clockpicker data-lng-clockpicker-options='options' required/>
+    									 			<span class="input-group-addon" style="cursor: pointer"><i class="fa fa-lg fa-clock-o"></i></span>
+    									 			<span ng-show="form.tmIN.$dirty && form.tmIN.$error.required" class="help-block">Time-in is required</span>
+    									    </div>    									    
+    		     					</div>		     					
+    		     					
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="timeOUT">Time Out:</label>
+                                    <div class="col-sm-7">
+                                    	   <datepicker date-format="yyyy-MM-dd" button-prev="<i class='fa fa-arrow-left'></i>" button-next="<i class='fa fa-arrow-right'></i>" datepicker-mobile="true" selector="form-control">
+                                                <div class="input-group date">
+                                                    <input class="form-control" name="dtOUT" id="dtOUT" ng-model="wo.dtOUT" placeholder="Select date" required/>
+                                                    <span class="input-group-addon" style="cursor: pointer"><i class="fa fa-lg fa-calendar"></i></span>
+                                                    <span ng-show="form.dtOUT.$dirty && form.dtOUT.$error.required" class="help-block">Date for Time-Out is required</span>
+                                                </div>
+                                            </datepicker>
+                                            <div class="input-group date">
+    									 			<input class="form-control" name="tmOUT" id="tmOUT" ng-model="wo.tmOUT" placeholder="Select the out time" data-lng-clockpicker data-lng-clockpicker-options='options' required/>
+    									 			<span class="input-group-addon" style="cursor: pointer"><i class="fa fa-lg fa-clock-o"></i></span>
+    									 			<span ng-show="form.tmOUT.$dirty && form.tmOUT.$error.required" class="help-block">Time-Out is required</span>
+    									    </div>    									    
+    		     					</div>		     					
+    		     					
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="workedHours">Worked Hours:</label>
+                                    <div class="col-sm-7">
+                                        <!-- <input type="time" name="workedHours" class="form-control" id="workedHours" ng-model="wo.workedHours" required> -->
+                                        <input name="workedHours" class="form-control" id="workedHours" value={{getTimeDiff(wo)}} readonly="" ng-if="wo.dtIN && wo.tmIN && wo.dtOUT && wo.tmOUT" />
+                                        <span ng-show="form.workedHours.$dirty && form.workedHours.$error.required" class="help-block">Worked is required</span>
+                                    </div>
+                                </div>
+
+
+                                <center>
+                                    <button type="submit" ng-click="workorderCreate(wo.empName,wo)" ng-disabled="form.$invalid || dataLoading" class="btn btn-custom"><b>Submit</b>
+                                    </button>
+                                    <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                </center>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                            <button ui-turn-off="event1" class="btn btn-default">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal1" ui-if="event2" ui-state="event2">
+            <div id="stonedetails" class="" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!--  <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                            <button type="button" ui-turn-off="event2" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Stone Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <br>
+                            <br>
+                            <form name="form" class="form-horizontal">
+                                <pre>{{stonedetails}}</pre>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="stonewidth">Stone Width (mm):</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="stonewidth" class="form-control" id="stonewidth" ng-model="stonedetails.width" required>
+                                        <span ng-show="form.stonewidth.$dirty && form.stonewidth.$error.required" class="help-block">Stone Width is required</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="stoneheight">Stone Height (mm):</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="stoneheight" class="form-control" id="stoneheight" ng-model="stonedetails.height" required>
+                                        <span ng-show="form.stoneheight.$dirty && form.stoneheight.$error.required" class="help-block">Stone Height is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="stonelength">Stone Length (mm):</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="stonelength" class="form-control" id="stonelength" ng-model="stonedetails.length" required>
+                                        <span ng-show="form.stonelength.$dirty && form.stonelength.$error.required" class="help-block">Stone Length is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="stonetype">Stone Type:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="stonetype" class="form-control" id="stonetype" ng-model="stonedetails.type" required>
+                                        <span ng-show="form.stonetype.$dirty && form.stonetype.$error.required" class="help-block">Stone Type is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="stonecolour">Stone Colour:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="stonecolour" class="form-control" id="stonecolour" ng-model="stonedetails.colour" required>
+                                        <span ng-show="form.stonecolour.$dirty && form.stonecolour.$error.required" class="help-block">Stone Colour is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="quantity">Quantity:</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="quantity" class="form-control" id="quantity" ng-model="stonedetails.quantity" required>
+                                        <span ng-show="form.quantity.$dirty && form.quantity.$error.required" class="help-block">Quantity is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="slabNo">No of Slabs:</label>
+                                    <div class="col-sm-7">
+                                        <input name="slapNo" class="form-control" id="slabNo" value="{{stonedetails.length * stonedetails.width /144}}" readonly="" ng-if="stonedetails.length && stonedetails.width" />                        
+                                    </div>
+                                </div>
+
+
+                                <center>
+                                    <button ng-click="stoneDetailsSave(stonedetails)" ng-disabled="form.$invalid || dataLoading" class="btn btn-custom"><b>Submit</b>
+                                    </button>
+                                    <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                </center>
+                            </form>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                            <button ui-turn-off="event2" class="btn btn-default">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal1" ui-if="event3" ui-state="event3">
+            <div id="shareimages" class="" role="dialog" >
+                <div class="modal-dialog">
+
+                    <!--  Modal content -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                            <button type="button" ui-turn-off="event3" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Share Images</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div style="height:200px; overflow:auto">
+                                <!-- <table class="table table-striped">
+                                    <tr ng-repeat="img in images">
+                                         <td>
+                                            <img ng-src="data:image/JPEG;base64,{{img.image}}"> <br>
+                                            {{img.imgeName}}
+                                        </td>
+                                    </tr>
+                                </table> -->
+                                <div class="col-sm-12" ng-repeat="row in images">
+     								<div class="col-sm-4" ng-repeat="img in row">
+         								<img ng-src="data:image/JPEG;base64,{{img.image}}" style="width:128px;height:128px;" ng-if="img.image"> <br>
+                                            {{img.imgeName}}
+     								</div>
+ 								</div>
+                            </div>
+
+<!--   <div class="image-upload" style="position:absolute;bottom:5px;right:50px;margin:0;">
+    <label for="file-input">
+        <i class="fa fa-plus-circle fa-5x" aria-hidden="true" style="color:green"></i>
+    </label>
+    
+    <input id="file-input" style="display:none;" type="file" nv-file-select="" uploader="uploader" multiple />
+    <br>
+     <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                                        Upload
+                                    </button>
+</div> -->
+                                       
+           <!--    <div class="button" ngf-select="upload($file)" style="position:absolute;bottom:5px;right:50px;margin:0;">
+            		<i class="fa fa-plus-circle fa-5x" aria-hidden="true" style="color:green"></i></div>    -->                   
+         
+        
+<!--         <label for="file-input">
+        <i class="fa fa-plus-circle fa-5x" aria-hidden="true" style="color:green"></i>
+    </label>          
+                 <input id="file-input" type="file" ngf-select="upload($file)"   required>
+				</input> -->
+		
+ <!-- 		<label for="file-input">
+        <i class="fa fa-plus-circle fa-5x" aria-hidden="true" style="color:green"></i>
+    </label> -->		
+				<img class="img-thumbnail" ngf-src="file" ngf-resize="{width: 100, height: 100, quality: 0.9}" ngf-no-object-url="true" > 
+<input type="file" id="file-input" class="btn btn-primary button" ngf-select="upload($file)" ng-model="file" name="file" ngf-pattern="'.jpg,.jpeg,.png'"
+        ngf-accept="'image/*'" ngf-max-size="2MB" ngf-min-height="650" ngf-min-width="900" 
+         ngf-resize="{width: 1000, height: 650}" required>
+</input>
+<!-- <span class="info-note" >Allowed File Dimension: 1000px * 650px, Allowed File Size: 2 MB, Allowed File Type: JPG, JPEG, PNG
+</span>
+<div ngf-thumbnail="file" ngf-size="{width: 20, height: 20, quality: 0.9}" ngf-as-background="boolean">
+</div> -->
+ 
+		</div>  
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                            <button type="button" ui-turn-off="event3" class="btn btn-default">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+                <div class="modal1" ui-if="event4" ui-state="event4">
+            <div id="charts" class="" role="dialog" >
+                <div class="modal-dialog">
+
+                    <!--  Modal content -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" ui-turn-off="event4" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Charts</h4>
+                        </div>
+                        <div class="modal-body">
+    <div style="position:relative;">
+      <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+    </div>
+                            </div>                                     
+                                  
+                        
+                        <div class="modal-footer">
+                            <button type="button" ui-turn-off="event4" class="btn btn-default">Close</button>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+                            <div class="modal1" ui-if="event5" ui-state="event5">
+            <div id="reports" class="" role="dialog" >
+                <div class="modal-dialog">
+
+                    <!--  Modal content -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" ui-turn-off="event5" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Reports</h4>
+                        </div>
+                        <div class="modal-body">
+    <div>
+   	 
+      <table class="table table-striped" at-table at-paginated at-list="workorder" at-config="config">
+      <caption> 
+      	<span class="align-left"><strong>Work Order Details</strong></span>
+      </caption>
+  <thead></thead>
+  <tbody>
+    <tr>
+      <td at-implicit at-sortable at-title="Employee Name" at-attribute="empName" width="200" at-initial-sorting="asc"></td>
+      <td at-implicit at-sortable at-title="Time In" at-attribute="timeIN"  width="150"></td>
+      <td at-implicit at-sortable at-title="Time Out" at-attribute="timeOUT"  width="150"></td>
+      <td at-implicit at-sortable at-title="Worked hours" at-attribute="workedHours" width="200"></td>
+    </tr>
+  </tbody>
+</table>
+
+<at-pagination at-list="workorder" at-config="config"></at-pagination>
+    </div>
+                           
+                                       
+                                  
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" ui-turn-off="event5" class="btn btn-default">Close</button>
+                        </div>
+                         </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+ 
+
+
+
+    <div class="row text-center">
+        <div class="col-sm-12">
+           <!--  <div class="col-sm-6">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <button class="btn btn-custom" ui-turn-on="event1">
+                    data-toggle="modal" data-target="#workorder"
+                    <i class="fa fa-handshake-o fa-5x" aria-hidden="true"></i>
+                    <br>
+                    <span style="font-size: 20px;"><b>&nbsp;&nbsp;Work Order&nbsp;&nbsp;</b></span>
+                </button>
+            </div> 
+			<div class="col-sm-6">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <button class="btn btn-custom" ui-turn-on="event2">
+                    <i class="fa fa-info fa-5x" aria-hidden="true"></i>
+                    <br> <span style="font-size: 20px;"><b>&nbsp;&nbsp;Stone Details</b></span>
+                </button>
+            </div> -->
+            <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button ng-click="workOrder()" class="btn btn-custom">
+                        <i class="fa fa-handshake-o fa-5x" aria-hidden="true"></i>
+                        <br> <span style="font-size: 20px;"><b>&nbsp;&nbsp;Work Order&nbsp;&nbsp;</b></span>
+                    </button>
+                </div>
+                <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button ng-click="stoneDetails()" class="btn btn-custom">
+                        <i class="fa fa-info fa-5x" aria-hidden="true"></i>
+                        <br> <span style="font-size: 20px;"><b>&nbsp;&nbsp;Stone Details</b></span>
+                    </button>
+                </div>
+            
+            <div class="col-sm-12">
+            <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button ng-click="imageDetails()" class="btn btn-custom">
+                        <i class="fa fa-share-alt fa-5x" aria-hidden="true"></i>
+                        <br> <span style="font-size: 20px;"><b>Share Images</b></span>
+                    </button>
+                </div>
+                <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button ng-click="charts()" class="btn btn-custom">
+                        <i class="fa fa-bar-chart fa-5x" aria-hidden="true"></i>
+                        <br> <span style="font-size: 20px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+                    </button>
+                </div>
+                <!-- <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="btn btn-custom" ui-turn-on="event3">
+                        <i class="fa fa-share-alt fa-5x" aria-hidden="true"></i>
+                        <br>
+                        <span style="font-size: 20px;"><b>Share Images</b></span>
+                    </button>
+                </div> -->
+	           <!--  <div class="col-sm-6">
+	                <br>
+	                <br>
+	                <br>
+	                <br>
+	                <br>
+	                <button class="btn btn-custom" ui-turn-on="event4">
+	                    <i class="fa fa-bar-chart fa-5x" aria-hidden="true"></i>
+	                    <br> <span style="font-size: 20px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+	                </button>
+	            </div> -->
+            </div>
+            <div class="col-sm-12">
+                 <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button ng-click="reports()" class="btn btn-custom">
+                        <i class="fa fa-file-text fa-5x" aria-hidden="true"></i><br> 
+                        <span style="font-size: 20px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reports&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+                    </button>
+                 </div>
+ <!--            <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="btn btn-custom" ui-turn-on="event5">
+                        <i class="fa fa-file-text fa-5x" aria-hidden="true"></i>
+                        <br>
+                        <span style="font-size: 20px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reports&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+                    </button>
+                </div> -->
+                <div class="col-sm-6">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button ng-click="logOut()" class="btn btn-custom">
+                        <i class="fa fa-sign-out fa-5x" aria-hidden="true"></i>
+                        <br> <span style="font-size: 20px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
